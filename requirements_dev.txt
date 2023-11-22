@@ -1,0 +1,2 @@
+pytest
+Commitizen

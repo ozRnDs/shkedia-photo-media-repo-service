@@ -7,7 +7,7 @@ This will be CRUD RESTful API based on FastAPI.
 
 ## The service actions
 GET /media/{media_id}
-POST /media/{media_id}
+POST /media
 DELETE /media/{media_id}
 
 # Deploy
