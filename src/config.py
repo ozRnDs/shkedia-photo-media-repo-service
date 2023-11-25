@@ -13,6 +13,12 @@ class ApplicationConfiguration:
 
     RECONNECT_WAIT_TIME: int = 1
 
+    IMAGES_REPO_URL: str = "shekdia-dev-storage"
+
+    # Authentication Configuration values
+    IDENTITY_TOKEN_LOCATION: str = "CHANGE ME"
+    AUTH_SERVICE_URL: str = "CHANGE ME"
+
     RETRY_NUMBER: int = 10
 
     def __init__(self) -> None:
@@ -28,6 +34,6 @@ class ApplicationConfiguration:
             try:
                 self.__setattr__(attr, (attr_type)(os.environ[attr]))
             except Exception as err:
-                self.logger.warning(f"Couldn't find {attr} in environment. Run with default")
+                self.logger.warning(f"Couldn't find {attr} in environment. Run with default value")
         
 app_config = ApplicationConfiguration()
