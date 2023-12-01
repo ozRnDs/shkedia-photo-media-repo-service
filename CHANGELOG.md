@@ -1,3 +1,9 @@
+## 0.2.0 (2023-12-01)
+
+### Feat
+
+- **routes/media/put_image**: Change route method to PUT. Get blob name from the file in the request. Upload the file in a dated folder. Return MediaStoreInfo object as response
+
 ## 0.1.0 (2023-11-25)
 
 ### Feat
