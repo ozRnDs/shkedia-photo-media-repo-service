@@ -3,5 +3,7 @@
         "dockerfile": "Dockerfile",
         "context": "../"
     },
-    "forwardPorts": [5000]
+    "forwardPorts": [5000],
+    "runArgs": [ "-p","25555:5000", "-v","${localEnv:AWS_CRED_LOCATION}/:/root/.aws"],
+    "shutdownAction": "stopContainer"
 }

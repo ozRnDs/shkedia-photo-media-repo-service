@@ -7,4 +7,6 @@ WORKDIR /usr/src
 
 COPY requirements.txt requirements_dev.txt ./
 
+RUN cat requirements_dev.txt >> requirements.txt
+
 RUN pip install -r requirements.txt
