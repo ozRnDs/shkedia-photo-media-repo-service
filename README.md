@@ -20,7 +20,7 @@ cat << EOT >> ~/.aws/config
     region = <the region of the bucket>
     EOT
 
-cat << EOT >> ~/.aws
+cat << EOT >> ~/.aws/credentials
     [default]
     aws_access_key_id = <The application's account access key>
     aws_secret_access_key = <The application's account secret access key>
