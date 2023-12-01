@@ -3,7 +3,7 @@ from fastapi.responses import Response
 from pydantic import BaseModel
 from uuid import uuid4
 
-from repository.service import AWSRepoService
+from repository.service import AWSRepoService, MediaStorageInfo
 
 class MediaClass(BaseModel):
     media_id: str = str(uuid4())
@@ -11,7 +11,6 @@ class MediaClass(BaseModel):
 
 class SuccessResponse(BaseModel):
     media_id: str = str(uuid4())
-
 
 router = APIRouter(tags=["Media"])
 
@@ -31,22 +30,23 @@ class MediaServiceHandler:
     def __initialize_routes__(self):
         router = APIRouter(tags=["media"])
         router.add_api_route(path="/", 
-                             endpoint=self.post_media,
-                             methods=["post"],
-                             response_model=SuccessResponse)
-        router.add_api_route(path="/{media_id}", 
+                             endpoint=self.put_media,
+                             methods=["put"],
+                             response_model=MediaStorageInfo)
+        router.add_api_route(path="/{service_name}/{bucket_name}/{media_id}", 
                              endpoint=self.get_media,
                              methods=["get"])
-        router.add_api_route(path="/{media_id}", endpoint=self.delete_media, methods=["delete"])
+        router.add_api_route(path="/{service_name}/{bucket_name}/{media_id}", endpoint=self.delete_media, methods=["delete"])
         return router
 
 
-    def post_media(self, media: UploadFile):
-        temp_media_object = MediaClass(media_content=media.file.read())
+    def put_media(self, media: UploadFile) -> MediaStorageInfo:
+        media_id = media.filename
+        temp_media_object = MediaClass(media_id=media_id, media_content=media.file.read())
         try:
-            self.repo_service.upload(media_id=temp_media_object.media_id,
+            media_storage_info = self.repo_service.upload(media_id=temp_media_object.media_id,
                                      media_content=temp_media_object.media_content)
-            return SuccessResponse(media_id=temp_media_object.media_id)
+            return media_storage_info
         except Exception as err:
             #TODO: Log the full err
             raise HTTPException(status_code=500,detail="Could not upload the image")

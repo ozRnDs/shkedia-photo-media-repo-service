@@ -3,6 +3,12 @@ import boto3
 logger = logging.getLogger(__name__)
 
 from unittest.mock import MagicMock
+from pydantic import BaseModel
+from datetime import datetime
+class MediaStorageInfo(BaseModel):
+    media_uri: str
+    bucket_name: str
+    storage_service_name: str
 
 
 class RepoService:
@@ -10,6 +16,9 @@ class RepoService:
         #TODO: Add repository connections parameters (Host,Port,User,Password)
         self.repo_object = MagicMock()
         pass
+
+    def __get_stoge_service_name__(self):
+        return type(self).__name__
 
     def upload(self,media_id: str, media_content: bytes) -> None:
         logger.info(f"Uploaded {media_id}")
@@ -43,12 +52,14 @@ class AWSRepoService(RepoService):
         self.repo_object = boto3.client('s3')
 
     def upload(self, media_id: str, media_content: bytes) -> None:
+        blob_path = datetime.now().strftime("%Y-%m-%d")+f"/{media_id}"
         upload_response = self.repo_object.put_object(Bucket=self.storage_path,
-                                    Key=media_id,
+                                    Key=blob_path,
                                     Body=media_content,
-                                    )
+                                    )        
         if not "ETag" in upload_response:
             raise Exception("Unexpected response from AWS server")
+        return MediaStorageInfo(media_uri=media_id, bucket_name=self.storage_path, storage_service_name=self.__get_stoge_service_name__())
 
     def delete(self, media_id: str) -> bool:
         try:
