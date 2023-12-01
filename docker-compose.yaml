@@ -1,0 +1,14 @@
+services:
+  repo-api:
+    image: public.ecr.aws/q2n5r5e8/ozrnds/shkedia-photo-media-repo-service:${MEDIA_REPO_SERVICE_VERSION}
+    container_name: media_repo_api
+    env_file: .local/media_repo_service_$ENVIRONMENT.env
+    environment:
+      - IMAGES_REPO_URL
+    expose:
+      - "5000"
+    ports:
+      - "4432:5000"
+    volumes:
+      - ${AWS_CRED_LOCATION}:/root/.aws
+    restart: always
